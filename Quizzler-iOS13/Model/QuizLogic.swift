@@ -1,20 +1,14 @@
 //
-//  ViewController.swift
+//  QuizLogic.swift
 //  Quizzler-iOS13
 //
-//  Created by Angela Yu on 12/07/2019.
-//  Updated by Ilia Shapovalov on 12/04/2022.
-//  Copyright © 2019 The App Brewery. All rights reserved.
+//  Created by Илья Шаповалов on 13.04.2022.
+//  Copyright © 2022 The App Brewery. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class ViewController: UIViewController {
-    
-    @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet weak var progressBar: UIProgressView!
-    @IBOutlet weak var trueButton: UIButton!
-    @IBOutlet weak var falseButton: UIButton!
+struct QuizLogic {
     
     let quiz = [
         Question(q: "A slug's blood is green.", a: "True"),
@@ -33,40 +27,14 @@ class ViewController: UIViewController {
     
     var questionNumber = 0
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    func checkAnswer(_ userAnswer: String) -> Bool {
         
-        updateUI()
-    }
-
-    @IBAction func answerButtonPressed(_ sender: UIButton) {
-        
-        let userAnswer = sender.currentTitle //True, False
-        let actualAnswer = quiz[questionNumber].answer
-        
-        if userAnswer == actualAnswer {
-            sender.backgroundColor = UIColor.systemGreen
+        if userAnswer == quiz[questionNumber].answer {
+            return true
         } else {
-            sender.backgroundColor = UIColor.systemRed
+           return false
         }
         
-        if questionNumber < quiz.count - 1 {
-            questionNumber += 1
-        } else {
-            questionNumber = 0
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.updateUI()
-        }
-        
-    }
-    
-    func updateUI() {
-        questionLabel.text = quiz[questionNumber].text
-        trueButton.backgroundColor = UIColor.clear
-        falseButton.backgroundColor = UIColor.clear
     }
     
 }
-
