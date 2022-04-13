@@ -11,10 +11,12 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
-    @IBOutlet weak var trueButton: UIButton!
-    @IBOutlet weak var falseButton: UIButton!
+    @IBOutlet weak var choise1: UIButton!
+    @IBOutlet weak var choise2: UIButton!
+    @IBOutlet weak var choise3: UIButton!
     
     var quizLogic = QuizLogic()
     
@@ -26,19 +28,18 @@ class ViewController: UIViewController {
 
     @IBAction func answerButtonPressed(_ sender: UIButton) {
         
-        let userAnswer = sender.currentTitle! //True, False
+        //Created constant that stores user's choise
+        let userAnswer = sender.tag //True, False
+        //Created constant that stores result of user's choise.
+        let userGotRightAnswer = quizLogic.checkAnswer(userAnswer)
         
-        if quizLogic.checkAnswer(userAnswer) {
+        if userGotRightAnswer {
             sender.backgroundColor = UIColor.systemGreen
         } else {
             sender.backgroundColor = UIColor.systemRed
         }
         
-        if questionNumber < quiz.count - 1 {
-            questionNumber += 1
-        } else {
-            questionNumber = 0
-        }
+        quizLogic.nextQuestion()
         
         //Creating delay between buttonPressed and updateUI.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -48,12 +49,17 @@ class ViewController: UIViewController {
     }
     
     func updateUI() {
-        questionLabel.text = quiz[questionNumber].text
+        questionLabel.text = quizLogic.getQuestionText()
+        progressBar.progress = quizLogic.getProgress()
+        scoreLabel.text = "Score \(quizLogic.getScore())"
         
-        progressBar.progress = Float(questionNumber + 1) / Float(quiz.count)
+        choise1.backgroundColor = UIColor.clear
+        choise2.backgroundColor = UIColor.clear
+        choise3.backgroundColor = UIColor.clear
         
-        trueButton.backgroundColor = UIColor.clear
-        falseButton.backgroundColor = UIColor.clear
+        choise1.setTitle(quizLogic.getAnswerText(for: choise1.tag), for: .normal)
+        choise2.setTitle(quizLogic.getAnswerText(for: choise2.tag), for: .normal)
+        choise3.setTitle(quizLogic.getAnswerText(for: choise3.tag), for: .normal)
     }
     
 }
